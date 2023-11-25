@@ -1,107 +1,145 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Unity.Burst.Intrinsics.X86;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Player Stats")]
     [SerializeField] private float jumpForce = 14f;
     [SerializeField] private float moveSpeed = 7f;
-    [SerializeField] private float wallCheckDistance;
+    [SerializeField] private float slideForce;
+
+    [Header("Collision Infos")]
     [SerializeField] private LayerMask jumpableGround;
-    [SerializeField] private AudioSource jumpSoundEffect;
+    [SerializeField] private float groundCheckDistance = 1.1f;
+    [SerializeField] private float wallCheckDistance = 0.55f;
     
 
     private float movX = 0;
+    private bool isGrounded; //Check if i'm on the ground
+    private bool canMove = true;
+    private bool canDoubleJump = true;
+    private bool isFacingRight = true; //If i'm facinf x+ direction
+    private bool isWallDetected;
+    private bool canWallSlide;
+    private bool isWallSliding;
 
-    private enum DoubleJumped { init, jumped, done }
-    private DoubleJumped doubleJumped = DoubleJumped.init;
-    private enum MovementState { idle, running, jumping, falling, doubleJump }
 
     private Rigidbody2D playerRigibody;
-    private Animator playerAnimator;
-    private SpriteRenderer playerSpriteRenderer;
-    private BoxCollider2D playerBoxCollider2D;
+
     // Start is called before the first frame update
     private void Start()
     {
         playerRigibody = GetComponent<Rigidbody2D>();
-        playerAnimator = GetComponent<Animator>();
-        playerSpriteRenderer = GetComponent<SpriteRenderer>();
-        playerBoxCollider2D = GetComponent<BoxCollider2D>();
     }
 
     // Update is called once per frame
     private void Update()
     {
-        MovementDetection();
-        UpdateAnimation();
+        CheckInput();
+        CollisionCheck();
+        FlipController();
     }
 
-    private void MovementDetection()
+    private void FixedUpdate()
     {
+        if (isGrounded)
+        {
+            canDoubleJump = true;
+        }
+
+        if(isWallDetected && canWallSlide)
+        {
+            isWallSliding = true;
+            playerRigibody.velocity = new Vector3(playerRigibody.velocity.x, playerRigibody.velocity.y * slideForce);
+        }
+        else
+        {
+            isWallSliding = false;
+            Move();
+        }
+    }
+
+    private void CheckInput()
+    {
+        //Move();
+        if (Input.GetButtonDown("Jump"))
+        {
+            JumpButton();
+        }
+
+        if(canMove)
         movX = Input.GetAxisRaw("Horizontal");
+    }
+
+    private void Move()
+    {
+        if(canMove)
         playerRigibody.velocity = new Vector2(movX * moveSpeed, playerRigibody.velocity.y);
-
-        if (Input.GetButtonDown("Jump") && IsGrounded())
-        {
-            doubleJumped = DoubleJumped.init;
-            playerRigibody.velocity = new Vector2(playerRigibody.velocity.x, jumpForce);
-            jumpSoundEffect.Play();
-        }
-
-        if (Input.GetButtonDown("Jump") && !IsGrounded() && doubleJumped == DoubleJumped.init)
-        {
-            doubleJumped = DoubleJumped.jumped;
-            playerRigibody.velocity = new Vector2(playerRigibody.velocity.x, jumpForce);
-            jumpSoundEffect.Play();
-        }
     }
 
     private void Flip()
     {
-
+        isFacingRight = !isFacingRight;
+        transform.Rotate(0, 180, 0);
     }
 
-    private void UpdateAnimation()
+    private void FlipController()
     {
-        MovementState state;
-
-        if (movX > 0f)
+        if(isGrounded && isWallSliding)
         {
-            state = MovementState.running;
-            playerSpriteRenderer.flipX = false;
-        }
-        else if (movX < 0f)
-        {
-            state = MovementState.running;
-            playerSpriteRenderer.flipX = true;
-        }
-        else
-        {
-            state = MovementState.idle;
+            if(isFacingRight && movX < -.1f)
+            {
+                Flip();
+            }
+            else if(!isFacingRight && movX > .1f)
+            {
+                Flip();
+            }
         }
 
-        if(doubleJumped == DoubleJumped.jumped)
+        if(playerRigibody.velocity.x > .1f && !isFacingRight)
         {
-            state = MovementState.doubleJump;
-            doubleJumped = DoubleJumped.done;
+            Flip();
         }
-
-        else if(playerRigibody.velocity.y > .1f)
+        else if (playerRigibody.velocity.x < -.1f && isFacingRight) 
         {
-            state = MovementState.jumping;
+            Flip();
         }
-
-        else if(playerRigibody.velocity.y < -.1f)
-        {
-            state = MovementState.falling;
-        }
-
-        playerAnimator.SetInteger("State", (int)state);
     }
 
-    private bool IsGrounded()
+    private void JumpButton()
     {
-        return Physics2D.BoxCast(playerBoxCollider2D.bounds.center, playerBoxCollider2D.bounds.size, 0f, Vector2.down, .1f, jumpableGround);
+        if (isGrounded) Jump();
+
+        else if (canDoubleJump)
+        {
+            canDoubleJump = false;
+            Jump();
+        }
+    }
+
+    private void Jump()
+    {
+        playerRigibody.velocity = new Vector2(playerRigibody.velocity.x, jumpForce);
+    }
+
+    private void CollisionCheck()
+    {
+        isGrounded = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, jumpableGround);
+        isWallDetected = Physics2D.Raycast(transform.position, Vector2.right * (isFacingRight ? 1 : -1), wallCheckDistance, jumpableGround);
+
+        if(!isGrounded && playerRigibody.velocity.y < -.1f)
+        {
+            canWallSlide = true;
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(transform.position, new Vector2 (transform.position.x,transform.position.y - groundCheckDistance));
+        Gizmos.DrawLine(transform.position, new Vector2 (transform.position.x + wallCheckDistance * (isFacingRight? 1:-1),transform.position.y));
     }
 }

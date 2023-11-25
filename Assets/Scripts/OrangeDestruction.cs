@@ -19,5 +19,6 @@ public class OrangeDestruction : MonoBehaviour
     public void PlayDeath()
     {
         orangeAnimator.SetTrigger("Collected");
+        Invoke("DestroyOrange", 1f);
     }
 }
