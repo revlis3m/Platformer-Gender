@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Unity.Burst.Intrinsics.X86;
 
+
 public class PlayerController : MonoBehaviour
 {
     [Header("Player Stats")]
     [SerializeField] private float jumpForce = 14f;
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private float slideForce;
+    [SerializeField] private Vector2 wallJumpForce;
 
     [Header("Collision Infos")]
     [SerializeField] private LayerMask jumpableGround;
@@ -24,29 +26,45 @@ public class PlayerController : MonoBehaviour
     private bool isWallDetected;
     private bool canWallSlide;
     private bool isWallSliding;
-
+    private bool canWallJump = true; //If can jump off the wall while slide
+    private int facingDirection = 1;
+    private bool doubleJumped;
 
     private Rigidbody2D playerRigibody;
+    private Animator playerAnimator;
+
+    private enum AnimationState { idle, running, doubleJump, wallSliding, dead }
+    private AnimationState state;
 
     // Start is called before the first frame update
     private void Start()
     {
         playerRigibody = GetComponent<Rigidbody2D>();
+        playerAnimator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     private void Update()
     {
+        
+
         CheckInput();
         CollisionCheck();
         FlipController();
+        AnimationController();
     }
 
     private void FixedUpdate()
     {
+        if (Input.GetAxisRaw("Vertical") < -.1f)
+        {
+            canWallSlide = false;
+        }
+
         if (isGrounded)
         {
             canDoubleJump = true;
+            canMove = true;
         }
 
         if(isWallDetected && canWallSlide)
@@ -54,7 +72,7 @@ public class PlayerController : MonoBehaviour
             isWallSliding = true;
             playerRigibody.velocity = new Vector3(playerRigibody.velocity.x, playerRigibody.velocity.y * slideForce);
         }
-        else
+        else if(!isWallDetected)
         {
             isWallSliding = false;
             Move();
@@ -71,6 +89,8 @@ public class PlayerController : MonoBehaviour
 
         if(canMove)
         movX = Input.GetAxisRaw("Horizontal");
+
+        
     }
 
     private void Move()
@@ -81,6 +101,7 @@ public class PlayerController : MonoBehaviour
 
     private void Flip()
     {
+        facingDirection *= -1;
         isFacingRight = !isFacingRight;
         transform.Rotate(0, 180, 0);
     }
@@ -111,18 +132,62 @@ public class PlayerController : MonoBehaviour
 
     private void JumpButton()
     {
-        if (isGrounded) Jump();
+        if(isWallSliding && canWallJump)
+        {
+            WallJump();
+        }
+        
+        else if (isGrounded) Jump();
 
         else if (canDoubleJump)
         {
+            canMove = true;
             canDoubleJump = false;
+            doubleJumped = true;
             Jump();
         }
+
+        canWallSlide = false;
     }
 
     private void Jump()
     {
         playerRigibody.velocity = new Vector2(playerRigibody.velocity.x, jumpForce);
+    }
+
+    private void WallJump()
+    {
+        canMove = false;
+
+        Vector2 direction = new Vector2(wallJumpForce.x * -facingDirection, wallJumpForce.y);
+        playerRigibody.AddForce(direction, ForceMode2D.Impulse);
+    }
+
+    private void AnimationController()
+    {
+        
+        playerAnimator.SetBool("isGrounded", isGrounded);
+        playerAnimator.SetFloat("yVelocity", playerRigibody.velocity.y);
+        if (movX != 0)
+        {
+            state = AnimationState.running;
+        }
+        else
+        {
+            state = AnimationState.idle;
+        }
+
+        if (isWallSliding)
+        {
+            state = AnimationState.wallSliding;
+        }
+
+        if (doubleJumped) 
+        { 
+            state = AnimationState.doubleJump;
+            doubleJumped = false;
+        }
+        playerAnimator.SetInteger("state", (int)state);
     }
 
     private void CollisionCheck()
