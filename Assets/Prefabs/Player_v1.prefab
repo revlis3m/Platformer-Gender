@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8336174538101471465}
   - component: {fileID: 8941299716671006390}
   - component: {fileID: 5903819956780570844}
+  - component: {fileID: 933388412270418403}
   m_Layer: 0
   m_Name: Player_v1
   m_TagString: Untagged
@@ -104,7 +105,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 3
-  m_Material: {fileID: 6200000, guid: bf799c24d8d826b468a57a5e3a4e919c, type: 2}
+  m_Material: {fileID: 6200000, guid: 63dfb054ea6ce074a8beadc872e4d407, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -124,7 +125,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 6526944121034852555}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: bf799c24d8d826b468a57a5e3a4e919c, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -179,6 +180,15 @@ MonoBehaviour:
   jumpableGround:
     serializedVersion: 2
     m_Bits: 64
+  sandGround:
+    serializedVersion: 2
+    m_Bits: 256
+  iceGround:
+    serializedVersion: 2
+    m_Bits: 512
+  mudGround:
+    serializedVersion: 2
+    m_Bits: 0
   groundCheckDistance: 1.12
   wallCheckDistance: 0.56
 --- !u!95 &5903819956780570844
@@ -202,3 +212,15 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &933388412270418403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6526944121034852555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54582fce3c1985f449967e4e7e98167f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

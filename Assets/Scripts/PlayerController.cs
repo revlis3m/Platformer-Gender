@@ -14,6 +14,9 @@ public class PlayerController : MonoBehaviour
 
     [Header("Collision Infos")]
     [SerializeField] private LayerMask jumpableGround;
+    [SerializeField] private LayerMask sandGround;
+    [SerializeField] private LayerMask iceGround;
+    [SerializeField] private LayerMask mudGround;
     [SerializeField] private float groundCheckDistance = 1.1f;
     [SerializeField] private float wallCheckDistance = 0.55f;
     
@@ -29,6 +32,9 @@ public class PlayerController : MonoBehaviour
     private bool canWallJump = true; //If can jump off the wall while slide
     private int facingDirection = 1;
     private bool doubleJumped;
+    private bool isSand;
+    private bool isIce;
+    private bool isMud;
 
     private Rigidbody2D playerRigibody;
     private Animator playerAnimator;
@@ -46,8 +52,6 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        
-
         CheckInput();
         CollisionCheck();
         FlipController();
@@ -194,6 +198,26 @@ public class PlayerController : MonoBehaviour
     {
         isGrounded = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, jumpableGround);
         isWallDetected = Physics2D.Raycast(transform.position, Vector2.right * (isFacingRight ? 1 : -1), wallCheckDistance, jumpableGround);
+        isSand = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, sandGround);
+        isIce = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, iceGround);
+        isMud = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, mudGround);
+
+        if (isSand)
+        {
+            moveSpeed = 3f;
+        }
+        else if (isIce)
+        {
+            moveSpeed = 14f;
+        }
+        else if (isMud)
+        {
+            moveSpeed = 0f;
+        }
+        else
+        {
+            moveSpeed = 7f;
+        }
 
         if(!isGrounded && playerRigibody.velocity.y < -.1f)
         {
