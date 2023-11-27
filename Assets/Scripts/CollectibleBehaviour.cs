@@ -9,6 +9,19 @@ public class CollectibleBehaviour : MonoBehaviour
     private void Start()
     {
         animator = GetComponent<Animator>();
+        switch (gameObject.tag)
+        {
+            case "Orange":
+                {
+                    animator.SetFloat("type", 0f);
+                }
+                break;
+            case "Arrow":
+                {
+                    animator.SetFloat("type", 1f);
+                }
+                break;
+        }
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
