@@ -17,6 +17,7 @@ public class PlayerLive : MonoBehaviour
         anim = GetComponent<Animator>();
         transform.position = new Vector2(checkPoint.transform.position.x, checkPoint.transform.position.y + 5f); ;
     }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Traps"))
@@ -43,11 +44,21 @@ public class PlayerLive : MonoBehaviour
         rb.bodyType = RigidbodyType2D.Dynamic;
     }
 
+    private void CompleteLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Checkpoint"))
         {
             checkPoint = collision.gameObject;
+        }
+
+        else if (collision.gameObject.CompareTag("End"))
+        {
+            Invoke("CompleteLevel", 2f);
         }
     }
 }
