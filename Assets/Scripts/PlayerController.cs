@@ -19,7 +19,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask mudGround;
     [SerializeField] private float groundCheckDistance = 1.1f;
     [SerializeField] private float wallCheckDistance = 0.55f;
-    
 
     private float movX = 0;
     private bool isGrounded; //Check if i'm on the ground
