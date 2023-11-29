@@ -85,15 +85,16 @@ public class PlayerController : MonoBehaviour
     private void CheckInput()
     {
         //Move();
-        if (Input.GetButtonDown("Jump"))
+        if (!PauseMenu.isPaused)
         {
-            JumpButton();
+            if (Input.GetButtonDown("Jump"))
+            {
+                JumpButton();
+            }
+
+            if(canMove)
+            movX = Input.GetAxisRaw("Horizontal");
         }
-
-        if(canMove)
-        movX = Input.GetAxisRaw("Horizontal");
-
-        
     }
 
     private void Move()

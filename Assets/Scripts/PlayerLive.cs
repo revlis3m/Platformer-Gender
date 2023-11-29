@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,6 +8,9 @@ public class PlayerLive : MonoBehaviour
 {
     private Animator anim;
     private Rigidbody2D rb;
+
+    [SerializeField] private TextMeshProUGUI uiCheckpoint;
+    private int checkpointCounter = 0;
 
     [Header("Checkpoints")]
     [SerializeField] GameObject checkPoint;
@@ -16,6 +20,7 @@ public class PlayerLive : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         transform.position = new Vector2(checkPoint.transform.position.x, checkPoint.transform.position.y + 5f); ;
+        uiCheckpoint.text = $"{checkpointCounter}/{LevelManager.numberLevel}";
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -54,10 +59,12 @@ public class PlayerLive : MonoBehaviour
         if (collision.gameObject.CompareTag("Checkpoint"))
         {
             checkPoint = collision.gameObject;
+            uiCheckpoint.text = $"{++checkpointCounter}/{LevelManager.numberLevel}";
         }
 
         else if (collision.gameObject.CompareTag("End"))
         {
+            uiCheckpoint.text = $"{++checkpointCounter}/{LevelManager.numberLevel}";
             Invoke("CompleteLevel", 2f);
         }
     }
