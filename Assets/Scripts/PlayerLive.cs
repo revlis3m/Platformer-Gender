@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerLive : MonoBehaviour
 {
@@ -16,12 +17,22 @@ public class PlayerLive : MonoBehaviour
     [Header("Checkpoints")]
     [SerializeField] GameObject checkPoint;
 
+    [SerializeField] Image star1;
+    [SerializeField] Image star2;
+    [SerializeField] Image star3;
+
+    private float ratio;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         transform.position = new Vector2(checkPoint.transform.position.x, checkPoint.transform.position.y + 5f); ;
         endMenu.SetActive(false);
+        ratio = 0;
+        star1.enabled = false;
+        star2.enabled = false;
+        star3.enabled = false;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -68,5 +79,13 @@ public class PlayerLive : MonoBehaviour
     {
         screenMenu.SetActive(false);
         endMenu.SetActive(true);
+        ratio = (float)(PlayerController.orangeCollected / 2) / (float)CollectibleBehaviour.total;
+        
+        if (ratio >= 1f)
+        {
+            star3.enabled = true;
+        }
+        if (ratio >= 0.6f)  star2.enabled = true;
+        if (ratio >= 0.3f)  star1.enabled = true;
     }
 }

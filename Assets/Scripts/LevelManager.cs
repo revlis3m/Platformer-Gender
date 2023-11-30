@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class LevelManager : MonoBehaviour
 {
     public int numberLevel;
+    private int maxLevel;
 
     private void Start()
     {
@@ -19,6 +20,7 @@ public class LevelManager : MonoBehaviour
 
     public void NextLevel()
     {
+        if(numberLevel > maxLevel)
         SceneManager.LoadScene(numberLevel + 1);
     }
 

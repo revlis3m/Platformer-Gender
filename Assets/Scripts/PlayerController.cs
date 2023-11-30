@@ -41,11 +41,14 @@ public class PlayerController : MonoBehaviour
     private enum AnimationState { idle, running, doubleJump, wallSliding, dead }
     private AnimationState state;
 
+    public static int orangeCollected;
+
     // Start is called before the first frame update
     private void Start()
     {
         playerRigibody = GetComponent<Rigidbody2D>();
         playerAnimator = GetComponent<Animator>();
+        orangeCollected = 0;
     }
 
     // Update is called once per frame

@@ -6,6 +6,7 @@ using UnityEngine;
 public class CollectibleBehaviour : MonoBehaviour
 {
     private Animator animator;
+    private BoxCollider2D cl;
 
     public static event Action OnCollected;
     public static int total;
@@ -21,6 +22,7 @@ public class CollectibleBehaviour : MonoBehaviour
     private void Start()
     {
         animator = GetComponent<Animator>();
+        cl = GetComponent<BoxCollider2D>();
         switch (gameObject.tag)
         {
             case "Orange":
@@ -40,6 +42,8 @@ public class CollectibleBehaviour : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             if(gameObject.CompareTag("Orange")) OnCollected?.Invoke();
+            PlayerController.orangeCollected++;
+            cl.enabled = false;
             OnDestroy();
         }
     }
