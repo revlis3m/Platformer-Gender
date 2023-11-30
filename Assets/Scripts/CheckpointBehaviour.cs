@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,10 +6,22 @@ using UnityEngine;
 public class CheckpointBehaviour : MonoBehaviour
 {
     private Animator animator;
+    private BoxCollider2D boxCollider;
+    public static event Action OnCollected;
+    public static int total;
 
     private void Start()
     {
         animator = GetComponent<Animator>();
+        boxCollider = GetComponent<BoxCollider2D>();
+    }
+
+    void Awake()
+    {
+        if (gameObject.CompareTag("Checkpoint"))
+        {
+            total++;
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -31,7 +44,9 @@ public class CheckpointBehaviour : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
+            if (gameObject.CompareTag("Checkpoint")) OnCollected?.Invoke();
             animator.SetTrigger("Checked");
+            boxCollider.enabled = false;
         }
     }
 }

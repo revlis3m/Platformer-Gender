@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -9,8 +10,8 @@ public class PlayerLive : MonoBehaviour
     private Animator anim;
     private Rigidbody2D rb;
 
-    [SerializeField] private TextMeshProUGUI uiCheckpoint;
-    private int checkpointCounter = 0;
+    [SerializeField] private GameObject screenMenu;
+    [SerializeField] private GameObject endMenu;
 
     [Header("Checkpoints")]
     [SerializeField] GameObject checkPoint;
@@ -20,7 +21,7 @@ public class PlayerLive : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         transform.position = new Vector2(checkPoint.transform.position.x, checkPoint.transform.position.y + 5f); ;
-        uiCheckpoint.text = $"{checkpointCounter}/{LevelManager.numberLevel}";
+        endMenu.SetActive(false);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -43,15 +44,10 @@ public class PlayerLive : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    private void LastCheckpoint()
+    public void LastCheckpoint()
     {
         transform.position = checkPoint.transform.position;
         rb.bodyType = RigidbodyType2D.Dynamic;
-    }
-
-    private void CompleteLevel()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -59,13 +55,18 @@ public class PlayerLive : MonoBehaviour
         if (collision.gameObject.CompareTag("Checkpoint"))
         {
             checkPoint = collision.gameObject;
-            uiCheckpoint.text = $"{++checkpointCounter}/{LevelManager.numberLevel}";
         }
 
         else if (collision.gameObject.CompareTag("End"))
         {
-            uiCheckpoint.text = $"{++checkpointCounter}/{LevelManager.numberLevel}";
-            Invoke("CompleteLevel", 2f);
+            EndLevel();
+            
         }
+    }
+
+    public void EndLevel()
+    {
+        screenMenu.SetActive(false);
+        endMenu.SetActive(true);
     }
 }

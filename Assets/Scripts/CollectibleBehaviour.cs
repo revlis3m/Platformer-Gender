@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,17 @@ using UnityEngine;
 public class CollectibleBehaviour : MonoBehaviour
 {
     private Animator animator;
+
+    public static event Action OnCollected;
+    public static int total;
+
+    void Awake()
+    {
+        if (gameObject.CompareTag("Orange"))
+        {
+            total++;
+        }
+    }
 
     private void Start()
     {
@@ -27,6 +39,7 @@ public class CollectibleBehaviour : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
+            if(gameObject.CompareTag("Orange")) OnCollected?.Invoke();
             OnDestroy();
         }
     }
