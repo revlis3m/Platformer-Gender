@@ -7,6 +7,8 @@ public class CollectibleBehaviour : MonoBehaviour
 {
     private Animator animator;
     private BoxCollider2D cl;
+    [SerializeField] private AudioClip collectedClip;
+    [SerializeField] private AudioClip arrowClip;
 
     public static event Action OnCollected;
     public static int total;
@@ -41,9 +43,18 @@ public class CollectibleBehaviour : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
+            PlayerController player = collision.gameObject.GetComponent<PlayerController>();
             if(gameObject.CompareTag("Orange")) OnCollected?.Invoke();
             PlayerController.orangeCollected++;
             cl.enabled = false;
+            if (gameObject.CompareTag("Orange"))
+            {
+                player.PlaySound(collectedClip);
+            }
+            else if (gameObject.CompareTag("Arrow"))
+            {
+                player.PlaySound(arrowClip);
+            }
             OnDestroy();
         }
     }

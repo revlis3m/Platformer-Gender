@@ -121,6 +121,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c786c0d48196f24c9e7607b84cfa411, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collectedClip: {fileID: 8300000, guid: 52320e590bf774734a288886eba557ba, type: 3}
+  arrowClip: {fileID: 8300000, guid: 29bde6326b4c34ad8a12da475f79b50a, type: 3}
 --- !u!61 &6946344419530135030
 BoxCollider2D:
   m_ObjectHideFlags: 0

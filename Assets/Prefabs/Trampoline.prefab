@@ -145,6 +145,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   propulsionForce: 30
+  fallingGrav: 0.7
+  fanTime: 2
+  groundCheckDistance: 0
+  trapTimeActive: 0.28
+  fireClip: {fileID: 0}
+  trampolineClip: {fileID: 8300000, guid: 2c5292ba5cf254919a6b9e2b18e04f49, type: 3}
+  addons: {fileID: 0}
+  flyParticles: {fileID: 0}
+  crashableLand:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!95 &6305045386305279137
 Animator:
   serializedVersion: 5

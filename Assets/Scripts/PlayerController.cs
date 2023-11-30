@@ -20,6 +20,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float groundCheckDistance = 1.1f;
     [SerializeField] private float wallCheckDistance = 0.55f;
 
+    [SerializeField] private AudioClip jumpSound;
+
     private float movX = 0;
     private bool isGrounded; //Check if i'm on the ground
     private bool canMove = true;
@@ -37,17 +39,20 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D playerRigibody;
     private Animator playerAnimator;
+    private AudioSource audioSource;
 
     private enum AnimationState { idle, running, doubleJump, wallSliding, dead }
     private AnimationState state;
 
     public static int orangeCollected;
+    
 
     // Start is called before the first frame update
     private void Start()
     {
         playerRigibody = GetComponent<Rigidbody2D>();
         playerAnimator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
         orangeCollected = 0;
     }
 
@@ -160,6 +165,7 @@ public class PlayerController : MonoBehaviour
     private void Jump()
     {
         playerRigibody.velocity = new Vector2(playerRigibody.velocity.x, jumpForce);
+        PlaySound(jumpSound);
     }
 
     private void WallJump()
@@ -233,5 +239,10 @@ public class PlayerController : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawLine(transform.position, new Vector2 (transform.position.x,transform.position.y - groundCheckDistance));
         Gizmos.DrawLine(transform.position, new Vector2 (transform.position.x + wallCheckDistance * (isFacingRight? 1:-1),transform.position.y));
+    }
+
+    public void PlaySound(AudioClip clip)
+    {
+        audioSource.PlayOneShot(clip);
     }
 }

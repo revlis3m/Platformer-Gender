@@ -9,6 +9,7 @@ public class CheckpointBehaviour : MonoBehaviour
     private BoxCollider2D boxCollider;
     public static event Action OnCollected;
     public static int total;
+    [SerializeField] private AudioClip checkpointSound;
 
     private void Start()
     {
@@ -44,7 +45,12 @@ public class CheckpointBehaviour : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            if (gameObject.CompareTag("Checkpoint")) OnCollected?.Invoke();
+            if (gameObject.CompareTag("Checkpoint")) 
+            { 
+                OnCollected?.Invoke(); 
+                PlayerController player = collision.gameObject.GetComponent<PlayerController>();
+                player.PlaySound(checkpointSound);
+            }
             animator.SetTrigger("Checked");
             boxCollider.enabled = false;
         }

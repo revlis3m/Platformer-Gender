@@ -11,6 +11,9 @@ public class TrapActivable : MonoBehaviour
     [SerializeField] private float trapTimeActive = 0.28f;
     private float actualTime; //Time that the fan is on CD
     private bool isFanOn = true;
+    [SerializeField] private AudioClip fireClip;
+    [SerializeField] private AudioClip trampolineClip;
+    private AudioSource audioSource;
 
     private Animator animator;
     private Rigidbody2D rb;
@@ -28,6 +31,7 @@ public class TrapActivable : MonoBehaviour
             case "Trampoline":
                 {
                     animator.SetFloat("TrapType", 0f);
+                    audioSource = GetComponent<AudioSource>();
                 }
                 break;
 
@@ -46,6 +50,7 @@ public class TrapActivable : MonoBehaviour
                 {
                     animator.SetFloat("TrapType", 3f);
                     addons.SetActive(false);
+                    audioSource = GetComponent<AudioSource>();
                 }
                 break;
         }
@@ -69,6 +74,9 @@ public class TrapActivable : MonoBehaviour
         {
             if (gameObject.CompareTag("Trampoline"))
             {
+                TrapActivable trap = gameObject.GetComponent<TrapActivable>();
+                //if(trampolineClip != null)
+                //trap.PlayClip(trampolineClip);
                 Propulse(collision);
                 animator.SetTrigger("TrapTrigger");
             }
@@ -87,6 +95,8 @@ public class TrapActivable : MonoBehaviour
         {
             if (gameObject.CompareTag("Fire"))
             {
+                TrapActivable trap = gameObject.GetComponent<TrapActivable>();
+                trap.PlayClip(fireClip);
                 animator.SetTrigger("Transition");
                 Invoke("Fire", trapTimeActive);
             }
@@ -152,5 +162,10 @@ public class TrapActivable : MonoBehaviour
     {
         animator.SetTrigger("TrapOff");
         addons.SetActive(false);
+    }
+
+    private void PlayClip(AudioClip clip)
+    {
+        audioSource.PlayOneShot(clip);
     }
 }

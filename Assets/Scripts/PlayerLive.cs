@@ -22,6 +22,8 @@ public class PlayerLive : MonoBehaviour
     [SerializeField] Image star3;
 
     private float ratio;
+    [SerializeField] private AudioClip endClip;
+    [SerializeField] private AudioClip deathClip;
 
     private void Start()
     {
@@ -39,6 +41,8 @@ public class PlayerLive : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Traps"))
         {
+            PlayerController player = gameObject.GetComponent<PlayerController>();
+            player.PlaySound(deathClip);
             Die();
         }
     }
@@ -70,8 +74,9 @@ public class PlayerLive : MonoBehaviour
 
         else if (collision.gameObject.CompareTag("End"))
         {
+            PlayerController player = gameObject.GetComponent<PlayerController>();
+            player.PlaySound(endClip);
             EndLevel();
-            
         }
     }
 

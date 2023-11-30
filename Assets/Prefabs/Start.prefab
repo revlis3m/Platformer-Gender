@@ -143,7 +143,7 @@ Animator:
   m_GameObject: {fileID: 3802008339615824459}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 347479e61ce326f498b8b12144cf8e36, type: 2}
+  m_Controller: {fileID: 9100000, guid: 8ed6aea1f70100645afa11800f429a5f, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -193,3 +193,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3e4f7ac89b50df4888bd3723cf6e1e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  checkpointSound: {fileID: 0}
