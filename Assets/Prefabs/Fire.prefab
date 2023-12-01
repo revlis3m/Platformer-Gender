@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 3975303708693267971}
   - component: {fileID: 7230697736028525091}
   - component: {fileID: -5502377546367222253}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Fire
   m_TagString: Fire
   m_Icon: {fileID: 0}
@@ -295,11 +295,14 @@ MonoBehaviour:
   fanTime: 2
   groundCheckDistance: 0
   trapTimeActive: 0.28
+  fireClip: {fileID: 0}
+  trampolineClip: {fileID: 0}
   addons: {fileID: 2097023320888985255}
   flyParticles: {fileID: 0}
   crashableLand:
     serializedVersion: 2
     m_Bits: 0
+  areaEffector: {fileID: 0}
 --- !u!82 &-5502377546367222253
 AudioSource:
   m_ObjectHideFlags: 0
