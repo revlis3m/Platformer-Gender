@@ -174,11 +174,12 @@ MonoBehaviour:
   trapTimeActive: 0.28
   fireClip: {fileID: 0}
   trampolineClip: {fileID: 0}
-  addons: {fileID: 0}
+  addons: {fileID: 8088679484548517878}
   flyParticles: {fileID: 0}
   crashableLand:
     serializedVersion: 2
     m_Bits: 0
+  areaEffector: {fileID: 7650225617644250526}
 --- !u!82 &3570528386950676091
 AudioSource:
   m_ObjectHideFlags: 0
@@ -5252,7 +5253,7 @@ AreaEffector2D:
     m_Bits: 4294967295
   m_UseGlobalAngle: 0
   m_ForceAngle: 90
-  m_ForceMagnitude: 50
+  m_ForceMagnitude: 60
   m_ForceVariation: 0
   m_ForceTarget: 0
   m_Drag: 0

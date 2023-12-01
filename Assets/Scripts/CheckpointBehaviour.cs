@@ -8,7 +8,7 @@ public class CheckpointBehaviour : MonoBehaviour
     private Animator animator;
     private BoxCollider2D boxCollider;
     public static event Action OnCollected;
-    public static int total;
+    public static int total = 0;
     [SerializeField] private AudioClip checkpointSound;
 
     private void Start()

@@ -20,6 +20,7 @@ public class TrapActivable : MonoBehaviour
     [SerializeField] GameObject addons; //Wind, Fire
     [SerializeField] ParticleSystem flyParticles;
     [SerializeField] private LayerMask crashableLand;
+    [SerializeField] private AreaEffector2D areaEffector;
 
     private void Start()
     {
@@ -121,6 +122,7 @@ public class TrapActivable : MonoBehaviour
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
         rb.bodyType = RigidbodyType2D.Dynamic;
         flyParticles.Stop();
+        Invoke("OnDestroy", 1f);
     }
 
     private bool CollisionCheck()
@@ -140,12 +142,14 @@ public class TrapActivable : MonoBehaviour
         if(actualTime < 0f && isFanOn)
         {
             addons.SetActive(false);
+            areaEffector.enabled = false;
             isFanOn = !isFanOn;
             actualTime = fanTime;
         }
         else if(actualTime < 0f && !isFanOn)
         {
             addons.SetActive(true);
+            areaEffector.enabled = true;
             isFanOn = !isFanOn;
             actualTime = fanTime;
         }

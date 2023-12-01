@@ -71,6 +71,18 @@ public class WayPointFollower : MonoBehaviour
                 }
             }
         }
+        else
+        {
+            if (Vector2.Distance(waypoints[currentWayPointIndex].transform.position, transform.position) < .1f)
+            {
+                currentWayPointIndex++;
+                if (currentWayPointIndex >= waypoints.Length)
+                {
+                    currentWayPointIndex = 0;
+                }
+            }
+            transform.position = Vector2.MoveTowards(transform.position, waypoints[currentWayPointIndex].transform.position, speed * Time.deltaTime);
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

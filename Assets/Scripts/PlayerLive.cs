@@ -24,6 +24,7 @@ public class PlayerLive : MonoBehaviour
     private float ratio;
     [SerializeField] private AudioClip endClip;
     [SerializeField] private AudioClip deathClip;
+    [SerializeField] private float levelBottom = -30f;
 
     private void Start()
     {
@@ -35,6 +36,11 @@ public class PlayerLive : MonoBehaviour
         star1.enabled = false;
         star2.enabled = false;
         star3.enabled = false;
+    }
+
+    private void Update()
+    {
+        if (gameObject.transform.position.y == levelBottom) Die();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

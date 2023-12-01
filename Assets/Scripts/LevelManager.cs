@@ -15,7 +15,7 @@ public class LevelManager : MonoBehaviour
 
     public void ReloadLevel()
     {
-        SceneManager.LoadScene(numberLevel);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void NextLevel()
